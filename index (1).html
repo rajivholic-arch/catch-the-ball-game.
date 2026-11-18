@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Catch The Ball</title>
+<style>
+body {
+  text-align: center;
+  background: #111827;
+  color: white;
+  font-family: Arial;
+}
+
+canvas {
+  background: #1e293b;
+  border: 3px solid white;
+  border-radius: 10px;
+}
+</style>
+</head>
+<body>
+
+<h1>🎮 Catch The Ball</h1>
+<h2>Score: <span id="score">0</span></h2>
+
+<canvas id="game" width="320" height="450"></canvas>
+
+<p>Use ← and → arrow keys to move!</p>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let player = { x: 130, y: 410, w: 60, h: 15 };
+let ball = { x: 100, y: 0, r: 10 };
+let score = 0;
+let speed = 3;
+
+function draw() {
+  ctx.clearRect(0, 0, 320, 450);
+
+  // Player
+  ctx.fillStyle = "#22c55e";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+
+  // Ball
+  ctx.fillStyle = "#facc15";
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+  ctx.fill();
+
+  ball.y += speed;
+
+  // Catch ball
+  if (
+    ball.y + ball.r >= player.y &&
+    ball.x >= player.x &&
+    ball.x <= player.x + player.w
+  ) {
+    score++;
+    document.getElementById("score").innerText = score;
+    ball.y = 0;
+    ball.x = Math.random() * 300 + 10;
+    speed += 0.2;
+  }
+
+  // Game over
+  if (ball.y > 450) {
+    alert("Game Over! Score: " + score);
+    location.reload();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft")
+    player.x = Math.max(0, player.x - 25);
+
+  if (e.key === "ArrowRight")
+    player.x = Math.min(260, player.x + 25);
+});
+
+draw();
+</script>
+
+</body>
+</html>
